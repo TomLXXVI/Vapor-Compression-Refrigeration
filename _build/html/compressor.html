@@ -1,0 +1,837 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Compressor Simulation &#8212; Vapor Compression Refrigeration Calculations with Python</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Single-Stage Vapor Compression Machine Simulation" href="simulation.html" />
+    <link rel="prev" title="Drawing a log(P)-h Diagram" href="log_ph_diagram.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Vapor Compression Refrigeration Calculations with Python</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Vapor Compression Refrigeration with Python
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="theory.html">
+   Basic Principles of Vapor Compression Refrigeration
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="refrigerants.html">
+   Using Refrigerants
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="log_ph_diagram.html">
+   Drawing a log(P)-h Diagram
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Compressor Simulation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="simulation.html">
+   Single-Stage Vapor Compression Machine Simulation
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/compressor.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fcompressor.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/compressor.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-of-a-fixed-speed-compressor">
+   Example of a Fixed Speed Compressor
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-of-a-variable-speed-compressor">
+   Example of a Variable Speed Compressor
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Compressor Simulation</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-of-a-fixed-speed-compressor">
+   Example of a Fixed Speed Compressor
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#example-of-a-variable-speed-compressor">
+   Example of a Variable Speed Compressor
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="compressor-simulation">
+<h1>Compressor Simulation<a class="headerlink" href="#compressor-simulation" title="Permalink to this headline">#</a></h1>
+<hr class="docutils" />
+<p>To select a suitable compressor for a vapor compression machine, compressor manufacturers offer selection software. This selection software presents to the user one or more compressor models based on the user’s input, such as the kind of refrigerant, the required cooling or heating capacity at design conditions, the evaporation and condensation temperature aimed at under design conditions, the target degree of superheat at the evaporator exit and along the suction line, the target degree of subcooling at the condenser exit. The selection program also presents through tables and diagrams the compressor performance under a variety of working conditions, which are mainly characterized by evaporation and condensation temperature, whereby the degree of superheat and subcooling remain fixed. In addition to tables and diagrams most selection programs these days also offer extensive sets of coefficients that can be used in polynomial equations that mathematically describe the compressor performance characteristics, such as mass flow rate, cooling capacity, compressor power, etc. in function of evaporation and condensing temperature, and, in the case of variable speed compressors, also in function of compressor speed. With these polynomials it is possible to simulate the performance of a given compressor under varying working conditions.</p>
+<p>The polynomial coefficients can be exported from the selection program to a spreadsheet or comma-separated-values (csv) file. For each performance parameter a different set of coefficients is valid. Two classes have been written to model a real compressor based on the equations offered by compressor manufacturers. One class applies to compressors with fixed speed, while the other class applies to compressors with a variable speed drive. The variables in the equations of a fixed speed compressor are evaporation and condensation temperature only. The equations of a variable speed compressor also count compressor speed as a third variable. A fixed speed compressor is modeled using the class <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code> and a variable speed compressor is modeled by the class <code class="docutils literal notranslate"><span class="pre">VariableSpeedCompressor</span></code>. Both classes reside in the package <code class="docutils literal notranslate"><span class="pre">hvac.vapor_compression</span></code>.</p>
+<div class="cell tag_remove-input docutils container">
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">hvac</span> <span class="kn">import</span> <span class="n">Quantity</span>
+<span class="kn">from</span> <span class="nn">hvac.fluids</span> <span class="kn">import</span> <span class="n">Fluid</span><span class="p">,</span> <span class="n">fluid_logger</span>
+<span class="kn">from</span> <span class="nn">hvac.vapor_compression</span> <span class="kn">import</span> <span class="n">FixedSpeedCompressor</span><span class="p">,</span> <span class="n">VariableSpeedCompressor</span>
+<span class="kn">from</span> <span class="nn">hvac.charts.log_ph_diagram</span> <span class="kn">import</span> <span class="n">StandardVaporCompressionCycle</span><span class="p">,</span> <span class="n">LogPhDiagram</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Q_</span> <span class="o">=</span> <span class="n">Quantity</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In order to use these two classes, the coefficients of all performance parameters must be collected in a file that these classes can recognize. Therefore, the coefficients must be ordered in a table-like structure stored on disk with the csv file extension (*.csv). Examples of such files can be found in the folder <em>compressor_data</em> under the project’s main folder. The code block below will open a csv-file with the coefficients of one of the available compressor models and it will print the table on screen:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../compressor_data&quot;</span><span class="p">)</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">data_folder</span> <span class="o">/</span> <span class="s2">&quot;DSF175-4.csv&quot;</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">Input In [4],</span> in <span class="ni">&lt;cell line: 3&gt;</span><span class="nt">()</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">data_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../compressor_data&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="n">file</span> <span class="o">=</span> <span class="n">data_folder</span> <span class="o">/</span> <span class="s2">&quot;DSF175-4.csv&quot;</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="nb">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\util\_decorators.py:311,</span> in <span class="ni">deprecate_nonkeyword_arguments.&lt;locals&gt;.decorate.&lt;locals&gt;.wrapper</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">305</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_allow_args</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">306</span>     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">307</span>         <span class="n">msg</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">),</span>
+<span class="g g-Whitespace">    </span><span class="mi">308</span>         <span class="ne">FutureWarning</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">309</span>         <span class="n">stacklevel</span><span class="o">=</span><span class="n">stacklevel</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">310</span>     <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">311</span> <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\io\parsers\readers.py:680,</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, encoding_errors, dialect, error_bad_lines, warn_bad_lines, on_bad_lines, delim_whitespace, low_memory, memory_map, float_precision, storage_options)</span>
+<span class="g g-Whitespace">    </span><span class="mi">665</span> <span class="n">kwds_defaults</span> <span class="o">=</span> <span class="n">_refine_defaults_read</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">666</span>     <span class="n">dialect</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">667</span>     <span class="n">delimiter</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">676</span>     <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;delimiter&quot;</span><span class="p">:</span> <span class="s2">&quot;,&quot;</span><span class="p">},</span>
+<span class="g g-Whitespace">    </span><span class="mi">677</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">678</span> <span class="n">kwds</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwds_defaults</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">680</span> <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\io\parsers\readers.py:575,</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
+<span class="g g-Whitespace">    </span><span class="mi">572</span> <span class="n">_validate_names</span><span class="p">(</span><span class="n">kwds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;names&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="g g-Whitespace">    </span><span class="mi">574</span> <span class="c1"># Create the parser.</span>
+<span class="ne">--&gt; </span><span class="mi">575</span> <span class="n">parser</span> <span class="o">=</span> <span class="n">TextFileReader</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwds</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">577</span> <span class="k">if</span> <span class="n">chunksize</span> <span class="ow">or</span> <span class="n">iterator</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">578</span>     <span class="k">return</span> <span class="n">parser</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\io\parsers\readers.py:934,</span> in <span class="ni">TextFileReader.__init__</span><span class="nt">(self, f, engine, **kwds)</span>
+<span class="g g-Whitespace">    </span><span class="mi">931</span>     <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwds</span><span class="p">[</span><span class="s2">&quot;has_index_names&quot;</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">933</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="p">:</span> <span class="n">IOHandles</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="ne">--&gt; </span><span class="mi">934</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_engine</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\io\parsers\readers.py:1218,</span> in <span class="ni">TextFileReader._make_engine</span><span class="nt">(self, f, engine)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1214</span>     <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;rb&quot;</span>
+<span class="g g-Whitespace">   </span><span class="mi">1215</span> <span class="c1"># error: No overload variant of &quot;get_handle&quot; matches argument types</span>
+<span class="g g-Whitespace">   </span><span class="mi">1216</span> <span class="c1"># &quot;Union[str, PathLike[str], ReadCsvBuffer[bytes], ReadCsvBuffer[str]]&quot;</span>
+<span class="g g-Whitespace">   </span><span class="mi">1217</span> <span class="c1"># , &quot;str&quot;, &quot;bool&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;, &quot;Any&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">1218</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="o">=</span> <span class="n">get_handle</span><span class="p">(</span>  <span class="c1"># type: ignore[call-overload]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1219</span>     <span class="n">f</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1220</span>     <span class="n">mode</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1221</span>     <span class="n">encoding</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="g g-Whitespace">   </span><span class="mi">1222</span>     <span class="n">compression</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;compression&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="g g-Whitespace">   </span><span class="mi">1223</span>     <span class="n">memory_map</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;memory_map&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+<span class="g g-Whitespace">   </span><span class="mi">1224</span>     <span class="n">is_text</span><span class="o">=</span><span class="n">is_text</span><span class="p">,</span>
+<span class="g g-Whitespace">   </span><span class="mi">1225</span>     <span class="n">errors</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;encoding_errors&quot;</span><span class="p">,</span> <span class="s2">&quot;strict&quot;</span><span class="p">),</span>
+<span class="g g-Whitespace">   </span><span class="mi">1226</span>     <span class="n">storage_options</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;storage_options&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+<span class="g g-Whitespace">   </span><span class="mi">1227</span> <span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1228</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="g g-Whitespace">   </span><span class="mi">1229</span> <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">handles</span><span class="o">.</span><span class="n">handle</span>
+
+<span class="nn">File ~\anaconda3\envs\engineering-22-09\lib\site-packages\pandas\io\common.py:786,</span> in <span class="ni">get_handle</span><span class="nt">(path_or_buf, mode, encoding, compression, memory_map, is_text, errors, storage_options)</span>
+<span class="g g-Whitespace">    </span><span class="mi">781</span> <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">782</span>     <span class="c1"># Check whether the filename is to be opened in binary mode.</span>
+<span class="g g-Whitespace">    </span><span class="mi">783</span>     <span class="c1"># Binary mode does not support &#39;encoding&#39; and &#39;newline&#39;.</span>
+<span class="g g-Whitespace">    </span><span class="mi">784</span>     <span class="k">if</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span> <span class="ow">and</span> <span class="s2">&quot;b&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">785</span>         <span class="c1"># Encoding</span>
+<span class="ne">--&gt; </span><span class="mi">786</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">787</span>             <span class="n">handle</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">788</span>             <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">789</span>             <span class="n">encoding</span><span class="o">=</span><span class="n">ioargs</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">790</span>             <span class="n">errors</span><span class="o">=</span><span class="n">errors</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">791</span>             <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">792</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">793</span>     <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">794</span>         <span class="c1"># Binary mode</span>
+<span class="g g-Whitespace">    </span><span class="mi">795</span>         <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">ioargs</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;..\\compressor_data\\DSF175-4.csv&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The coefficients of four performance parameters are given in the file:</p>
+<ul class="simple">
+<li><p>the cooling capacity, denoted by <code class="docutils literal notranslate"><span class="pre">Qc_dot</span></code></p></li>
+<li><p>the mechanical compressor power, denoted by <code class="docutils literal notranslate"><span class="pre">Wc_dot</span></code></p></li>
+<li><p>the drawn compressor current, denoted by <code class="docutils literal notranslate"><span class="pre">I</span></code></p></li>
+<li><p>the mass flow rate of refrigerant, denoted by <code class="docutils literal notranslate"><span class="pre">m_dot</span></code></p></li>
+</ul>
+<p>A fifth parameter is alo possible, wich is the discharge temperature at the compressor outlet, denoted by <code class="docutils literal notranslate"><span class="pre">T_dis</span></code>.</p>
+<p>It is very important that these exact notations will be used, otherwise the program won’t understand and give you trouble.</p>
+<p>The polynomials describing each of the performance parameters in the example count 10 coefficients (C0…C9), which is the case for a fixed speed compressor. In case of a variable speed compressor the number of coefficients may be 20 (C0…C19) or 30 (C0…C29).</p>
+<section id="example-of-a-fixed-speed-compressor">
+<h2>Example of a Fixed Speed Compressor<a class="headerlink" href="#example-of-a-fixed-speed-compressor" title="Permalink to this headline">#</a></h2>
+<p>A fixed speed compressor is modelled by an instance of class <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code>. To instantiate this class, we need to specify the path of the csv-file, the degree of superheat and the degree of subcooling for which the polynomial coefficients are valid, and also the type of refrigerant:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fixed_speed_compressor</span> <span class="o">=</span> <span class="n">FixedSpeedCompressor</span><span class="p">(</span>
+    <span class="n">coeff_file</span><span class="o">=</span><span class="n">data_folder</span> <span class="o">/</span> <span class="s2">&quot;ZR144KCE-TFD.csv&quot;</span><span class="p">,</span>
+    <span class="n">dT_sh</span><span class="o">=</span><span class="n">Q_</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">),</span>  <span class="c1"># degree of superheat</span>
+    <span class="n">dT_sc</span><span class="o">=</span><span class="n">Q_</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">),</span>  <span class="c1"># degree of subcooling</span>
+    <span class="n">refrigerant_type</span><span class="o">=</span><span class="n">Fluid</span><span class="p">(</span><span class="s1">&#39;R22&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>Note</strong><br>
+It might be necessary that before instantiation the default units inside the <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code> class have to be adapted to the units that were used by the compressor manufacturer to express the magnitude of the performance quantities, as the units also have an impact on the values of the coefficients.<br>
+The dictionary <code class="docutils literal notranslate"><span class="pre">units</span></code> of class <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code> has the following keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'Qc_dot'</span></code> for cooling capacity - default unit <code class="docutils literal notranslate"><span class="pre">'kW'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'Wc_dot'</span></code> for compressor power - default unit <code class="docutils literal notranslate"><span class="pre">'kW'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'m_dot'</span></code> for mass flow rate - default unit <code class="docutils literal notranslate"><span class="pre">'g/s'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'speed'</span></code> for compressor speed - default unit <code class="docutils literal notranslate"><span class="pre">'1/min'</span></code>.</p></li>
+</ul>
+<p>To change the units in the <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code> class, you would write for example for mass flow rate:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FixedSpeedCompressor</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;m_dot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;kg / hr&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>After instantiation of the class, we need to set the working conditions of the compressor. Working conditions are determined by evaporation and condensation temperature:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Te</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="s1">&#39;degC&#39;</span><span class="p">)</span>   <span class="c1"># evaporator temperature</span>
+<span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Tc</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;degC&#39;</span><span class="p">)</span>    <span class="c1"># condenser temperature</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can retrieve the performance parameters of the compressor under the given working conditions:</p>
+<ul class="simple">
+<li><p>cooling capacity <code class="docutils literal notranslate"><span class="pre">Qc_dot</span></code></p></li>
+<li><p>mass flow rate <code class="docutils literal notranslate"><span class="pre">m_dot</span></code></p></li>
+<li><p>compressor power <code class="docutils literal notranslate"><span class="pre">Wc_dot</span></code></p></li>
+<li><p>isentropic efficiency <code class="docutils literal notranslate"><span class="pre">eta_is</span></code></p></li>
+<li><p>heating capacity (or heat rejection rate) <code class="docutils literal notranslate"><span class="pre">Qh_dot</span></code></p></li>
+<li><p>coefficient of performance <code class="docutils literal notranslate"><span class="pre">COP</span></code></p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Qc_dot = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Qc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Wc_dot = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Wc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;eta_is = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">eta_is</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;pct&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;m_dot = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">m_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;g/s&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Qh_dot = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Qh_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;COP = </span><span class="si">{</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">COP</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;frac&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Qc_dot = 32.02 kW
+Wc_dot = 9.14 kW
+eta_is = 73.23 %
+m_dot = 211.08 g/s
+Qh_dot = 41.16 kW
+COP = 3.50 frac
+</pre></div>
+</div>
+</div>
+</div>
+<p>Also the refrigerant states at the evaporator and condenser in- and outlet can be retrieved from the compressor model based on a standard vapor compression cycle (i.e. an idealized cycle whereby any pressure loss in the evaporator, the condenser, the liquid line, the suction line, or the discharge line is ignored).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">get_refrigerant_cycle</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                    T [degC]    P [bar]  rho [kg / m**3]  h [kJ / kg]  s [kJ / kg / K]
+evaporator inlet    5.000000   5.841087        82.808580   263.245111         1.227325
+evaporator outlet  15.000000   5.841087        23.510725   414.377603         1.770200
+condenser inlet    92.036116  19.426884        65.590656   457.680998         1.802519
+condenser outlet   50.000000  19.426884      1082.301952   263.245111         1.208032
+</pre></div>
+</div>
+</div>
+</div>
+<p>You can alter the units of the state properties in the table. For this you need to call <code class="docutils literal notranslate"><span class="pre">get_refrigeration_cycle</span></code> with a dictionary which must have following keys along with the corresponding desired unit: <code class="docutils literal notranslate"><span class="pre">'T'</span></code> for temperature, <code class="docutils literal notranslate"><span class="pre">'P'</span></code> for pressure, <code class="docutils literal notranslate"><span class="pre">'rho'</span></code> for mass density, <code class="docutils literal notranslate"><span class="pre">'h'</span></code> for enthalpy, and <code class="docutils literal notranslate"><span class="pre">'s'</span></code> for entropy. Note that it is not possible to change the unit of only one or a few state properties; you need to pass a complete dictionary with all the keys.</p>
+<p><strong>Log(P)-h Diagram</strong></p>
+<p>We can now draw the log(P)-h diagram of the vapor compression cycle at the working conditions we specified earlier (see also the chapter on log(P)-h diagrams).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vc_cycle</span> <span class="o">=</span> <span class="n">StandardVaporCompressionCycle</span><span class="p">(</span>
+    <span class="n">Refrigerant</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">refrigerant_type</span><span class="p">,</span>
+    <span class="n">evaporationTemperature</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Te</span><span class="p">,</span>
+    <span class="n">condensationTemperature</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">Tc</span><span class="p">,</span>
+    <span class="n">evaporatorSuperheat</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">dT_sh</span><span class="p">,</span>
+    <span class="n">subCooling</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">dT_sc</span><span class="p">,</span>
+    <span class="n">suctionLineSuperheat</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">isentropicEfficiency</span><span class="o">=</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">eta_is</span>
+<span class="p">)</span>
+
+<span class="n">log_ph_diagram</span> <span class="o">=</span> <span class="n">LogPhDiagram</span><span class="p">(</span><span class="n">fixed_speed_compressor</span><span class="o">.</span><span class="n">refrigerant_type</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span>
+<span class="n">log_ph_diagram</span><span class="o">.</span><span class="n">setCycle</span><span class="p">(</span><span class="n">vc_cycle</span><span class="p">)</span>
+<span class="n">log_ph_diagram</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/compressor_22_0.png" src="_images/compressor_22_0.png" />
+</div>
+</div>
+</section>
+<section id="example-of-a-variable-speed-compressor">
+<h2>Example of a Variable Speed Compressor<a class="headerlink" href="#example-of-a-variable-speed-compressor" title="Permalink to this headline">#</a></h2>
+<p>The procedure for a variable speed compressor is more or less identical to the one for the fixed speed compressor. Let’s demonstrate with an example: We have a compressor working with refrigerant R454B. This refrigerant -a mixture of 68.9 w-% R32 and 31.1 w-% R1234yf- is not available in CoolProp, but we can define the mixture as explained in the chapter on refrigerants. The polynomial coefficients from the compressor manufacturer expect that speed will be expressed in units of revs per second (1/s) and refrigerant mass flow rate in units of kilogram per hour (kg/hr). The coefficients were taken from the selection software at a superheat degree of 10 K and a subcooling degree of 5 K.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">VariableSpeedCompressor</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;speed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;1 / s&#39;</span>
+<span class="n">VariableSpeedCompressor</span><span class="o">.</span><span class="n">units</span><span class="p">[</span><span class="s1">&#39;m_dot&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;kg / hr&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable_speed_compressor</span> <span class="o">=</span> <span class="n">VariableSpeedCompressor</span><span class="p">(</span>
+    <span class="n">coeff_file</span><span class="o">=</span><span class="n">data_folder</span> <span class="o">/</span> <span class="s2">&quot;VZH088CGM.csv&quot;</span><span class="p">,</span>
+    <span class="n">dT_sh</span><span class="o">=</span><span class="n">Q_</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">),</span>
+    <span class="n">dT_sc</span><span class="o">=</span><span class="n">Q_</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">),</span>
+    <span class="n">refrigerant_type</span><span class="o">=</span><span class="n">Fluid</span><span class="p">(</span><span class="s1">&#39;R32&amp;R1234yf&#39;</span><span class="p">,</span> <span class="n">mass_fractions</span><span class="o">=</span><span class="p">[</span><span class="n">Q_</span><span class="p">(</span><span class="mf">0.689</span><span class="p">,</span> <span class="s1">&#39;frac&#39;</span><span class="p">),</span> <span class="n">Q_</span><span class="p">(</span><span class="mf">0.311</span><span class="p">,</span> <span class="s1">&#39;frac&#39;</span><span class="p">)])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The compressor’s documentation states that the frequency range of the variable speed drive is from 25 Hz to 100 Hz, which corresponds with a speed range of 1500 to 6000 revs/min. The compressor was selected with an evaporation temperature of -7 °C and a condensation temperature of 35 °C. The required heating capacity at these design conditions are met at a compressor speed of 5618 revs/min. Let’s get the performance data at these conditions:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Te</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;degC&#39;</span><span class="p">)</span>
+<span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Tc</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="s1">&#39;degC&#39;</span><span class="p">)</span>
+<span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mi">5618</span><span class="p">,</span> <span class="s1">&#39;1/min&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Qc_dot = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Qc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Wc_dot = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Wc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;eta_is = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">eta_is</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;pct&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;m_dot = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">m_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;g/s&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;Qh_dot = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Qh_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">f</span><span class="s2">&quot;COP = </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">COP</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;frac&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Qc_dot = 29.99 kW
+Wc_dot = 9.40 kW
+eta_is = 63.84 %
+m_dot = 136.21 g/s
+Qh_dot = 39.39 kW
+COP = 3.19 frac
+</pre></div>
+</div>
+</div>
+</div>
+<p>As with the <code class="docutils literal notranslate"><span class="pre">FixedSpeedCompressor</span></code> class, the magnitude of the state properties at the 4 corner points of the cycle can be requested:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">get_refrigerant_cycle</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                    T [degC]    P [bar]  rho [kg / m**3]  h [kJ / kg]  s [kJ / kg / K]
+evaporator inlet   -8.060569   5.793054        75.612544   257.825823         1.270456
+evaporator outlet   3.000000   5.793054        17.786724   475.621009         2.089846
+condenser inlet    91.869838  20.310615        48.747893   544.630980         2.160287
+condenser outlet   30.000000  20.310615       964.684346   257.825823         1.249224
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><strong>Note</strong><br>
+Although the evaporation temperature was set -7 °C, it can be noticed that according to CoolProp’s calculations the refrigerant temperature at the evaporator inlet is around -8 °C. The evaporation pressure is determined by the internal program code of class <code class="docutils literal notranslate"><span class="pre">VariableSpeedCompressor</span></code> at the given evaporation temperature (-7 °C) and for saturated vapor (<span class="math notranslate nohighlight">\(x\)</span> = 100 %). The enthalpy of the refrigerant at the evaporator inlet (a mixture of saturated liquid and vapor) equals the enthalpy of the subcooled liquid refrigerant at the condenser outlet, since the pressure reduction at the expansion valve is considered to be an isenthalpic process. Based on the evaporation pressure and the enthalpy, the refrigerant temperature at the evaporator inlet is then calculated by CoolProp to be around -8 °C, instead of -7 °C.</p>
+</div></blockquote>
+<p><strong>Log(P)-h Diagram</strong></p>
+<p>For refrigerant mixtures drawing a log(P)-h diagram throws an exception from inside CoolProp’s internal code (version 6.4.1). At the time of writing this notebook, no solution was found to overcome this error.</p>
+<p><strong>Minimum and Maximum Cooling Capacity at given Evaporation and Condensation Temperature</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mi">1500</span><span class="p">,</span> <span class="s1">&#39;1 / min&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cooling capacity at minimum speed: </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Qc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cooling capacity at minimum speed: 7.42 kW
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mi">6000</span><span class="p">,</span> <span class="s1">&#39;1 / min&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cooling capacity at minimum speed: </span><span class="si">{</span><span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">Qc_dot</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;kW&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cooling capacity at minimum speed: 32.01 kW
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Find the Compressor Speed to Realize a given Cooling Capacity at given Evaporation and Condensation Temperature</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Qc_dot</span> <span class="o">=</span> <span class="n">Q_</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="s1">&#39;kW&#39;</span><span class="p">)</span>
+<span class="n">rpm</span> <span class="o">=</span> <span class="n">variable_speed_compressor</span><span class="o">.</span><span class="n">get_compressor_speed</span><span class="p">(</span><span class="n">Qc_dot</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cooling capacity </span><span class="si">{</span><span class="n">Qc_dot</span><span class="si">:</span><span class="s2">~P.2f</span><span class="si">}</span><span class="s2"> @ </span><span class="si">{</span><span class="n">rpm</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;1 / min&#39;</span><span class="p">)</span><span class="si">:</span><span class="s2">~P.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cooling capacity 10.00 kW @ 1957.0 1/min
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="log_ph_diagram.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Drawing a log(P)-h Diagram</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="simulation.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Single-Stage Vapor Compression Machine Simulation</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Tom Christiaens<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
