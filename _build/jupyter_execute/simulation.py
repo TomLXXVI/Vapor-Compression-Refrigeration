@@ -79,7 +79,7 @@ Q_ = Quantity
 # In[4]:
 
 
-data_folder = Path("../compressor_data")
+data_folder = Path("./compressor_data")
 file = data_folder / "ZR144KCE-TFD.csv"
 
 
@@ -104,7 +104,7 @@ compressor = FixedSpeedCompressor(
 
 # Condition of inlet air at entrance of condenser:
 
-# In[8]:
+# In[7]:
 
 
 condenser_air_in = HumidAir(Tdb=Q_(40, 'degC'), RH=Q_(50, 'pct'))
@@ -112,7 +112,7 @@ condenser_air_in = HumidAir(Tdb=Q_(40, 'degC'), RH=Q_(50, 'pct'))
 
 # Mass flow rate of air through condenser:
 
-# In[9]:
+# In[8]:
 
 
 ma_con = Q_(3.911, 'kg/s')
@@ -120,7 +120,7 @@ ma_con = Q_(3.911, 'kg/s')
 
 # Condenser effectiveness:
 
-# In[10]:
+# In[9]:
 
 
 eps_con = Q_(71.19, 'pct')
@@ -130,7 +130,7 @@ eps_con = Q_(71.19, 'pct')
 
 # Condition of inlet air at entrance of evaporator:
 
-# In[11]:
+# In[10]:
 
 
 evaporator_air_in = HumidAir(Tdb=Q_(24, 'degC'), RH=Q_(50, 'pct'))
@@ -138,7 +138,7 @@ evaporator_air_in = HumidAir(Tdb=Q_(24, 'degC'), RH=Q_(50, 'pct'))
 
 # Mass flow rate of air through evaporator:
 
-# In[12]:
+# In[11]:
 
 
 ma_eva = Q_(1.097, 'kg/s')
@@ -146,7 +146,7 @@ ma_eva = Q_(1.097, 'kg/s')
 
 # Evaporator effectiveness:
 
-# In[13]:
+# In[12]:
 
 
 eps_eva = Q_(60.18, 'pct')
@@ -154,7 +154,7 @@ eps_eva = Q_(60.18, 'pct')
 
 # **Instantiation of class `SingleStageVCMachine`**
 
-# In[14]:
+# In[13]:
 
 
 machine = SingleStageVCMachine(
@@ -170,7 +170,7 @@ machine = SingleStageVCMachine(
 
 # At condenser:
 
-# In[15]:
+# In[14]:
 
 
 machine.ht_air_in = condenser_air_in
@@ -178,7 +178,7 @@ machine.ht_air_in = condenser_air_in
 
 # At evaporator:
 
-# In[16]:
+# In[15]:
 
 
 machine.lt_air_in = evaporator_air_in
@@ -186,7 +186,7 @@ machine.lt_air_in = evaporator_air_in
 
 # **Run simulation**
 
-# In[17]:
+# In[16]:
 
 
 machine.simulate()
@@ -194,7 +194,7 @@ machine.simulate()
 
 # **Get performance parameters**
 
-# In[18]:
+# In[17]:
 
 
 print(
@@ -208,7 +208,7 @@ print(
 
 # **Get evaporation and condensing temperature at current working conditions**
 
-# In[19]:
+# In[18]:
 
 
 print(
@@ -219,7 +219,7 @@ print(
 
 # The corresponding evaporator and condenser pressure can be retrieved from refrigerant states:
 
-# In[20]:
+# In[19]:
 
 
 print(
@@ -234,7 +234,7 @@ print(
 
 # To create a range of condenser air inlet temperatures, we will use the **[Numpy](https://numpy.org/)** library, imported above as `np`:
 
-# In[21]:
+# In[20]:
 
 
 T_ai_con_range = Q_(np.arange(28, 41, 1), 'degC')
@@ -242,7 +242,7 @@ T_ai_con_range = Q_(np.arange(28, 41, 1), 'degC')
 
 # We will repeat the above example for each temperature within this range. For this, we will use a `for`-loop and to temporarily store results, we create a number of lists:
 
-# In[22]:
+# In[21]:
 
 
 Qc_dot_range = []  # cooling capacities
@@ -253,7 +253,7 @@ Tc_range = []      # evaporating temperatures
 Te_range = []      # condensing temperatures
 
 
-# In[23]:
+# In[22]:
 
 
 for T_ai_con in T_ai_con_range:
@@ -271,7 +271,7 @@ for T_ai_con in T_ai_con_range:
 
 # ### Cooling Capacity in function of Outside Air Temperature
 
-# In[24]:
+# In[23]:
 
 
 chart1 = LineChart(size=(6, 4), dpi=96)
@@ -289,7 +289,7 @@ chart1.show()
 
 # ### Compressor Power in function of Outside Air Temperature
 
-# In[25]:
+# In[24]:
 
 
 chart2 = LineChart(size=(6, 4), dpi=96)
@@ -307,7 +307,7 @@ chart2.show()
 
 # ### COP in function of Outside Air Temperature
 
-# In[26]:
+# In[25]:
 
 
 chart3 = LineChart(size=(6, 4), dpi=96)
@@ -325,7 +325,7 @@ chart3.show()
 
 # ### Refrigerant Mass Flow Rate in function of Outside Air Temperature
 
-# In[27]:
+# In[26]:
 
 
 chart4 = LineChart(size=(6, 4), dpi=96)
@@ -343,7 +343,7 @@ chart4.show()
 
 # ### Evaporation Temperature in function of Outside Air Temperature 
 
-# In[28]:
+# In[27]:
 
 
 chart5 = LineChart(size=(6, 4), dpi=96)
@@ -359,7 +359,7 @@ chart5.show()
 
 # ### Condensation Temperature in function of Outside Air Temperature
 
-# In[29]:
+# In[28]:
 
 
 chart6 = LineChart(size=(6, 4), dpi=96)

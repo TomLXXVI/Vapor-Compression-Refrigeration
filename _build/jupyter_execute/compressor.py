@@ -42,12 +42,12 @@ from hvac.charts.log_ph_diagram import StandardVaporCompressionCycle, LogPhDiagr
 Q_ = Quantity
 
 
-# In order to use these two classes, the coefficients of all performance parameters must be collected in a file that these classes can recognize. Therefore, the coefficients must be ordered in a table-like structure stored on disk with the csv file extension (\*.csv). Examples of such files can be found in the folder *compressor_data* under the project's main folder. The code block below will open a csv-file with the coefficients of one of the available compressor models and it will print the table on screen:
+# In order to use these two classes, the coefficients of all performance parameters must be collected in a file that these classes can recognize. Therefore, the coefficients must be ordered in a table-like structure stored on disk with the csv file extension (\*.csv). Examples of such files can be found in the folder *compressor_data* under the project's main folder. The code block below will open a csv-file with the coefficients of one of the available compressor models, and it will print the table on screen:
 
 # In[4]:
 
 
-data_folder = Path("../compressor_data")
+data_folder = Path("./compressor_data")
 file = data_folder / "DSF175-4.csv"
 table = pd.read_csv(file)
 
